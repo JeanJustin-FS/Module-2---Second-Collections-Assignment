@@ -1,0 +1,706 @@
+{
+	"info": {
+		"_postman_id": "d91b914a-ec97-41d0-be59-3b9caf8acf00",
+		"name": "Cars/Horsepowers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36779382"
+	},
+	"item": [
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "Get ALL Cars",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    ",
+									"    responseData.data.forEach(function(car) {",
+									"        pm.expect(car).to.have.property('_id');",
+									"        pm.expect(car).to.have.property('id');",
+									"        pm.expect(car).to.have.property('make');",
+									"        pm.expect(car).to.have.property('model');",
+									"        pm.expect(car).to.have.property('year');",
+									"        pm.expect(car).to.have.property('completed');",
+									"        pm.expect(car).to.have.property('__v');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Data array is present and contains expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.exist.and.to.be.an('array');",
+									"    pm.expect(responseData.data).to.have.lengthOf.at.least(1);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Id is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.data.forEach(function(car) {",
+									"        pm.expect(car.id).to.be.a('number');",
+									"        pm.expect(car.id).to.be.at.least(0);",
+									"    });",
+									"});",
+									"",
+									"pm.test(\"Year is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.data.forEach(function(car) {",
+									"        pm.expect(car.year).to.be.a('number');",
+									"        pm.expect(car.year).to.be.at.least(0);",
+									"    });",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cars",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Car by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"",
+									"pm.test(\"Id is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should be a non-empty string\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Year is a positive integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData.data.year).to.be.a('number').and.to.be.above(0);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cars/680bd3c3cfc35f2daf9fb20d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"680bd3c3cfc35f2daf9fb20d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post New Car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required ID\", function () {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody.data).to.have.property(\"_id\").that.is.not.null;",
+									"    pm.expect(responseBody.data._id).to.be.length(24); ",
+									"",
+									"    pm.collectionVariables.set(\"carId\", responseBody.data.id);",
+									"});",
+									"   ",
+									"pm.test(\"The response has all properties\", ()=>{",
+									"    const responseData = pm.response.json();",
+									"    const { data } = responseData;",
+									"    pm.expect(data).to.have.property(\"id\");",
+									"    pm.expect(data).to.have.property(\"make\");",
+									"    pm.expect(data).to.have.property(\"model\");",
+									"    pm.expect(data).to.have.property(\"year\");",
+									"    pm.expect(data).to.have.property(\"horsepower\");",
+									"    pm.expect(data).to.have.property(\"completed\");",
+									"});",
+									"",
+									"pm.test(\"Horsepower should be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data.horsepower).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Horsepower should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Year is a positive integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data.year).to.be.a('number');",
+									"    pm.expect(responseData.data.year).to.be.above(0);",
+									"});",
+									"",
+									"pm.test(\"Response format is valid\", function () {",
+									"    const responseBody = pm.response.json();",
+									"    pm.expect(responseBody).to.have.property(\"message\");",
+									"    pm.expect(responseBody).to.have.property(\"data\");",
+									"    pm.expect(responseBody).to.have.property(\"success\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"// Verify the length of the response data",
+									"pm.test(\"The length of response data is valid\", function () {",
+									"    const responseData = pm.response.json().data;",
+									"    for (let key in responseData) {",
+									"        pm.expect(responseData[key]).to.not.be.undefined;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 5,\n    \"make\": \"Tesla\",\n    \"model\": \"Model Y\",\n    \"year\": \"2024\",\n    \"horsepower\": \"350hp\",\n    \"completed\": true\n        \n    }\n  ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cars/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Car by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the response schema for the data object\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.data).to.exist;",
+									"  pm.expect(responseData.data).to.be.an('object');",
+									"  pm.expect(responseData.data).to.have.property('_id');",
+									"  pm.expect(responseData.data).to.have.property('id').that.is.a('number');",
+									"  pm.expect(responseData.data).to.have.property('make');",
+									"  pm.expect(responseData.data).to.have.property('model');",
+									"  pm.expect(responseData.data).to.have.property('year').that.is.a('number');",
+									"  pm.expect(responseData.data).to.have.property('horsepower');",
+									"  pm.expect(responseData.data).to.have.property('completed');",
+									"  pm.expect(responseData.data).to.have.property('__v').that.is.a('number');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Success field is a boolean value\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.success).to.be.a('boolean');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"make\": \"TesT\"}\n  ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cars/68104c59f317447a4ace5da2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"68104c59f317447a4ace5da2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the response schema for the fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('data').that.is.an('object'); // Fixed data property to be an object instead of an array",
+									"",
+									"    pm.expect(responseData.data).to.have.property('_id').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('id').that.is.a('number');",
+									"    pm.expect(responseData.data).to.have.property('make').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('model').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('year').that.is.a('number');",
+									"    pm.expect(responseData.data).to.have.property('horsepower').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('completed').that.is.a('boolean'); // Fixed completed property to be a boolean",
+									"    pm.expect(responseData.data).to.have.property('__v').that.is.a('number');",
+									"    pm.expect(responseData).to.have.property('success').that.is.a('boolean');",
+									"});",
+									"",
+									"",
+									"",
+									"pm.test(\"Success field is a boolean value\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.success).to.be.a('boolean');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/cars/681070ad81f960ac56e48dda",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"cars",
+								"681070ad81f960ac56e48dda"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Horsepowers",
+			"item": [
+				{
+					"name": "Get ALL Horsepowers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"",
+									"pm.test(\"Verify the response schema for the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.data).to.be.an('array');",
+									"    ",
+									"    responseData.data.forEach(function(item) {",
+									"        pm.expect(item).to.have.property('_id');",
+									"        pm.expect(item).to.have.property('id');",
+									"        pm.expect(item).to.have.property('make');",
+									"        pm.expect(item).to.have.property('model');",
+									"        pm.expect(item).to.have.property('year');",
+									"        pm.expect(item).to.have.property('completed');",
+									"        pm.expect(item).to.have.property('__v');",
+									"    });",
+									"    pm.expect(responseData).to.have.property('success', true);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/horsepowers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"horsepowers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Horsepower by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.data.id).to.exist;",
+									"  pm.expect(responseData.message).to.exist;",
+									"  pm.expect(responseData.success).to.exist;",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/horsepowers/680bd614ec979149c79149bd",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"horsepowers",
+								"680bd614ec979149c79149bd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post New Horsepower",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 5,\n    \"make\": \"Tesla\",\n    \"model\": \"Model Y\",\n    \"year\": \"2024\",\n    \"horsepower\": \"350hp\",\n    \"completed\": true\n    \n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/horsepowers/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"horsepowers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the response schema for the presence of required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.id).to.exist;",
+									"    pm.expect(responseData.data).to.exist;",
+									"    pm.expect(responseData.data.make).to.exist;",
+									"    pm.expect(responseData.data.model).to.exist;",
+									"    pm.expect(responseData.data.year).to.exist;",
+									"    pm.expect(responseData.data.horsepower).to.exist;",
+									"    pm.expect(responseData.data.completed).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Success field is a boolean value\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.success).to.be.a('boolean');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"horsepower\": \"000hp\"}\n\n  ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/horsepowers/6810721763d7cd43d491ec64",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"horsepowers",
+								"6810721763d7cd43d491ec64"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist;",
+									"    pm.expect(responseData.id).to.exist;",
+									"    pm.expect(responseData.data).to.exist;",
+									"    pm.expect(responseData.success).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the data object schema\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.data).to.be.an('object'); // Fixed to check for object instead of array",
+									"    pm.expect(responseData.data).to.have.property('_id').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('createdAt').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('updatedAt').that.is.a('string');",
+									"    pm.expect(responseData.data).to.have.property('__v').that.is.a('number');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Success field is a boolean value\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData.success).to.be.a('boolean');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/horsepowers/681062e281f960ac56e48dd6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"horsepowers",
+								"681062e281f960ac56e48dd6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

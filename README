@@ -1,0 +1,12 @@
+Module 2 - Second Collections Assignment
+
+- Created connected sever 
+- Added packages 
+- Created gitignore file 
+- Created README file 
+- Created app index file 
+- Created .ENV
+- Created routes files, index, carRoutes, horsepowerRoutes 
+- Created controller files, carContoller, horsepowerController
+- Created Models files, cars, horsepowers, Validations 
+- Created CRUD collection 
